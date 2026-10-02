@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RecuperaPIX — Dossiê de Notificação Bancária e Acionamento MED (Res. BACEN 103)</title>
+  <meta name="description" content="Gerador Oficial de Notificação Extrajudicial Bancária, Denúncia BACEN e Acionamento do Mecanismo Especial de Devolução (MED) para vítimas de golpe do PIX e fraudes bancárias.">
+  <link rel="canonical" href="https://luckasdiazz.github.io/recuperapix/">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .doc-font { font-family: 'Merriweather', serif; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-amber-500 text-slate-950 px-4 py-2 text-xs md:text-sm font-semibold text-center flex items-center justify-center gap-2 shadow-inner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>URGENTE: A Resolução BCB nº 103 permite acionar o MED em até 80 dias, mas a chance de bloqueio do saldo golpista cai a cada hora. Notifique seu banco já.</span>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="./" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-brand-500/20">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5">
+            Recupera<span class="text-brand-500">PIX</span>
+          </span>
+          <span class="text-[10px] block text-slate-400 font-medium uppercase tracking-wider">Defesa do Consumidor Bancário</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+        <a href="#como-funciona" class="hover:text-brand-400 transition">Como Funciona</a>
+        <a href="#base-legal" class="hover:text-brand-400 transition">Base Legal (MED/STJ)</a>
+        <a href="#faq" class="hover:text-brand-400 transition">Dúvidas Frequentes</a>
+        <a href="transparencia.html" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-700 text-brand-400 text-xs font-semibold hover:border-brand-500 transition">
+          <i class="fa-solid fa-chart-pie text-[11px]"></i>
+          <span>Transparência R$ 100</span>
+        </a>
+      </nav>
+
+      <a href="#gerador" class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-xs md:text-sm transition flex items-center gap-2 shadow-lg shadow-brand-500/25">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Gerar Notificação</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-12 md:py-20 px-4 relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-900/40 border border-brand-500/30 text-brand-400 text-xs md:text-sm font-semibold mb-6">
+        <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+        <span>Amparado na Súmula 479 do STJ e Resolução BCB nº 103/2021</span>
+      </div>
+
+      <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight md:leading-[1.15] mb-6">
+        Caiu no Golpe do PIX e o Banco <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-amber-400">Recusou Devolver?</span>
+      </h1>
+
+      <p class="text-base md:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed mb-8">
+        O banco não pode simplesmente lavar as mãos. Gere em <strong>2 minutos</strong> a sua <span class="text-brand-400 font-semibold">Notificação Extrajudicial Oficial</span> com acionamento do <strong>MED (Mecanismo Especial de Devolução)</strong> e denúncia formal no <strong>Banco Central</strong>.
+      </p>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-3xl mx-auto text-left mb-10">
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-3">
+          <i class="fa-solid fa-file-contract text-brand-400 text-lg"></i>
+          <span class="text-xs font-medium text-slate-200">Notificação Pronta em PDF</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-3">
+          <i class="fa-solid fa-building-columns text-brand-400 text-lg"></i>
+          <span class="text-xs font-medium text-slate-200">Petição Direta BACEN</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-3">
+          <i class="fa-solid fa-scale-balanced text-brand-400 text-lg"></i>
+          <span class="text-xs font-medium text-slate-200">Súmula 479 STJ Citada</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-3">
+          <i class="fa-solid fa-address-book text-brand-400 text-lg"></i>
+          <span class="text-xs font-medium text-slate-200">Contatos das Ouvidorias</span>
+        </div>
+      </div>
+
+      <a href="#gerador" class="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-500 hover:from-brand-400 hover:to-emerald-400 text-slate-950 font-extrabold text-base md:text-lg transition shadow-xl shadow-brand-500/30">
+        <span>Preencher Meus Dados e Gerar Dossiê</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+
+      <div class="mt-4 text-xs text-slate-400 flex items-center justify-center gap-4">
+        <span><i class="fa-solid fa-lock text-emerald-400 mr-1"></i> Dados 100% seguros (LGPD)</span>
+        <span><i class="fa-solid fa-clock text-emerald-400 mr-1"></i> Leva menos de 2 minutos</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Generator Section -->
+  <section id="gerador" class="py-12 md:py-16 px-4 bg-slate-900/50 border-t border-slate-800">
+    <div class="max-w-5xl mx-auto">
+      
+      <div class="text-center mb-8">
+        <span class="text-brand-400 font-bold text-xs uppercase tracking-widest block mb-2">Assistente Passo a Passo</span>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-white">Monte Seu Dossiê Extrajudicial Agora</h2>
+        <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto mt-2">
+          Insira as informações do golpe para que o sistema estruture a fundamentação jurídica de cobrança para o seu banco.
+        </p>
+      </div>
+
+      <!-- Stepper Indicator -->
+      <div class="grid grid-cols-4 gap-2 mb-8 max-w-3xl mx-auto text-center text-xs font-semibold">
+        <div id="step-tab-1" class="py-2.5 rounded-lg border border-brand-500 bg-brand-950/60 text-brand-400 flex items-center justify-center gap-1.5 transition">
+          <span class="w-5 h-5 rounded-full bg-brand-500 text-slate-950 flex items-center justify-center text-[11px] font-bold">1</span>
+          <span class="hidden sm:inline">Seus Dados</span>
+        </div>
+        <div id="step-tab-2" class="py-2.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 flex items-center justify-center gap-1.5 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[11px] font-bold">2</span>
+          <span class="hidden sm:inline">O Golpe</span>
+        </div>
+        <div id="step-tab-3" class="py-2.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 flex items-center justify-center gap-1.5 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[11px] font-bold">3</span>
+          <span class="hidden sm:inline">O Banco</span>
+        </div>
+        <div id="step-tab-4" class="py-2.5 rounded-lg border border-slate-800 bg-slate-900 text-slate-400 flex items-center justify-center gap-1.5 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[11px] font-bold">4</span>
+          <span class="hidden sm:inline">Dossiê Pronto</span>
+        </div>
+      </div>
+
+      <!-- Step Cards Container -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-2xl">
+        
+        <!-- STEP 1: DADOS DA VÍTIMA -->
+        <div id="step-1" class="space-y-6">
+          <div class="border-b border-slate-800 pb-4">
+            <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-user-shield text-brand-400"></i>
+              <span>Passo 1 de 4: Seus Dados (Titular da Conta Prejudicada)</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Esses dados serão inseridos no cabeçalho formal da notificação à ouvidoria.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Seu Nome Completo *</label>
+              <input type="text" id="vitima_nome" placeholder="Ex: Lucas Gabriel da Silva" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Seu CPF *</label>
+              <input type="text" id="vitima_cpf" placeholder="000.000.000-00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Seu E-mail *</label>
+              <input type="email" id="vitima_email" placeholder="seuemail@exemplo.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Seu WhatsApp / Telefone *</label>
+              <input type="tel" id="vitima_telefone" placeholder="(11) 98765-4321" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Sua Cidade e Estado (UF) *</label>
+              <input type="text" id="vitima_cidade" placeholder="Ex: São Paulo / SP" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button onclick="avancarPasso(2)" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-sm transition flex items-center gap-2">
+              <span>Continuar para Dados do Golpe</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: DADOS DA TRANSFERÊNCIA FRAUDULENTA -->
+        <div id="step-2" class="space-y-6 hidden">
+          <div class="border-b border-slate-800 pb-4">
+            <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-money-bill-transfer text-brand-400"></i>
+              <span>Passo 2 de 4: Detalhes da Transferência e do Golpe</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Dados essenciais para a busca e bloqueio cautelar das contas receptoras.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Tipo de Golpe Sofrido *</label>
+              <select id="golpe_tipo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                <option value="Falsa Central Telefônica (Engenharia Social do Banco)">Falsa Central Telefônica (Falso 0800 / Falso Gerente)</option>
+                <option value="Golpe do WhatsApp (Perfil Clonado / Parente em Dificuldade)">Golpe do WhatsApp (Parente ou Amigo Falso)</option>
+                <option value="Site / Loja Virtual Falsa (Produto não entregue)">Site / Loja Virtual Falsa (Produto não entregue)</option>
+                <option value="Boleto ou Código QR PIX Adulterado">Boleto ou Código QR PIX Adulterado</option>
+                <option value="Falso Empréstimo / Liberação de Crédito">Falso Empréstimo com Exigência de Depósito</option>
+                <option value="Invasão de Dispositivo / Acesso Não Autorizado">Invasão de Dispositivo / Transação Desconhecida</option>
+                <option value="Outro Golpe ou Fraude Digital">Outro Tipo de Fraude Digital</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Valor Total Transferido (R$) *</label>
+              <input type="text" id="golpe_valor" placeholder="Ex: 1.500,00" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Data e Horário do PIX *</label>
+              <input type="text" id="golpe_data" placeholder="Ex: 28/09/2026 às 14:35" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Chave PIX Utilizada pelo Golpista *</label>
+              <input type="text" id="golpe_chave_pix" placeholder="E-mail, CPF, celular ou aleatória do golpista" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nome do Favorecido / Titular Golpista *</label>
+              <input type="text" id="golpe_favorecido" placeholder="Nome que apareceu no comprovante" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Código EndToEnd / ID da Transação (Opcional)</label>
+              <input type="text" id="golpe_id_transacao" placeholder="Ex: E000000002026..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button onclick="voltarPasso(1)" class="px-5 py-3 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-sm font-semibold transition">
+              <i class="fa-solid fa-arrow-left mr-1"></i> Voltar
+            </button>
+            <button onclick="avancarPasso(3)" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-slate-950 font-bold text-sm transition flex items-center gap-2">
+              <span>Continuar para Histórico Bancário</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: DADOS BANCÁRIOS E RECUSA -->
+        <div id="step-3" class="space-y-6 hidden">
+          <div class="border-b border-slate-800 pb-4">
+            <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-building-columns text-brand-400"></i>
+              <span>Passo 3 de 4: Instituições Bancárias e Contatos Anteriores</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Identificação das responsabilidades objetivas e protocolos de recusa preliminar.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Seu Banco de Origem (De onde saiu o dinheiro) *</label>
+              <select id="banco_origem" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                <option value="Nubank (Nu Pagamentos S.A.)">Nubank (Nu Pagamentos S.A.)</option>
+                <option value="Banco Itaú Unibanco S.A.">Banco Itaú Unibanco S.A.</option>
+                <option value="Banco Bradesco S.A.">Banco Bradesco S.A.</option>
+                <option value="Banco Santander Brasil S.A.">Banco Santander Brasil S.A.</option>
+                <option value="Banco do Brasil S.A.">Banco do Brasil S.A.</option>
+                <option value="Caixa Econômica Federal">Caixa Econômica Federal</option>
+                <option value="Banco Inter S.A.">Banco Inter S.A.</option>
+                <option value="C6 Bank S.A.">C6 Bank S.A.</option>
+                <option value="Mercado Pago Instituição de Pagamento">Mercado Pago</option>
+                <option value="PicPay Instituição de Pagamento">PicPay</option>
+                <option value="PagBank / PagSeguro">PagBank</option>
+                <option value="Outro Banco ou Fintech">Outro Banco ou Fintech</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Banco de Destino (Banco da conta golpista) *</label>
+              <input type="text" id="banco_destino" placeholder="Ex: Mercado Pago, PagBank, Nubank..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Número de Protocolo no Banco (Se já tiver)</label>
+              <input type="text" id="banco_protocolo" placeholder="Ex: 2026092812345" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Justificativa Dada Pelo Banco (Ou o que disseram)</label>
+              <input type="text" id="banco_recusa" placeholder="Ex: Disseram que foi feito com senha e não devolvem" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Já registrou Boletim de Ocorrência (B.O.)?</label>
+              <select id="bo_status" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                <option value="Sim, já registrado (possuo número de B.O.)">Sim, já registrado na Polícia Civil</option>
+                <option value="Ainda não registrado (preciso do modelo de texto)">Ainda não registrado (utilizarei o modelo do dossiê)</option>
+                <option value="Em andamento / aguardando validação eletrônica">Em andamento na Delegacia Eletrônica</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button onclick="voltarPasso(2)" class="px-5 py-3 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-sm font-semibold transition">
+              <i class="fa-solid fa-arrow-left mr-1"></i> Voltar
+            </button>
+            <button onclick="gerarPreviaDossie()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 hover:from-brand-400 hover:to-emerald-300 text-slate-950 font-extrabold text-sm transition flex items-center gap-2 shadow-lg shadow-brand-500/25">
+              <span>Gerar Prévia do Dossiê Completo</span>
+              <i class="fa-solid fa-gavel"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: PRÉVIA DO DOSSIÊ E CHECKOUT DE DESBLOQUEIO -->
+        <div id="step-4" class="space-y-8 hidden">
+          <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-brand-950 border border-brand-500/40 text-brand-400 text-xs font-bold mb-1">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Dossiê Estruturado com Sucesso</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-extrabold text-white">Confira a Prévia e Desbloqueie o Pacote Completo</h3>
+            </div>
+            <button onclick="voltarPasso(3)" class="text-xs text-slate-400 hover:text-white underline self-start md:self-auto">
+              Editar dados informados
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- COLUNA ESQUERDA: PRÉVIA DO DOCUMENTO JURÍDICO -->
+            <div class="lg:col-span-7 bg-white text-slate-900 rounded-xl p-6 md:p-8 shadow-2xl border border-slate-200 doc-font relative overflow-hidden text-xs md:text-sm leading-relaxed">
+              
+              <div class="bg-amber-100 border border-amber-300 text-amber-900 px-3 py-2 rounded-lg text-xs font-sans font-bold flex items-center justify-between mb-6">
+                <span><i class="fa-solid fa-eye mr-1.5"></i> PRÉVIA DO DOCUMENTO FORMAL</span>
+                <span class="text-[10px] bg-amber-200 px-2 py-0.5 rounded text-amber-950 uppercase">Versão Preliminar</span>
+              </div>
+
+              <div class="text-center border-b pb-4 mb-4">
+                <p class="font-bold uppercase tracking-wider text-xs text-slate-600">NOTIFICAÇÃO EXTRAJUDICIAL E REQUERIMENTO ADMINISTRATIVO URGENTE</p>
+                <p class="font-black text-sm text-slate-900 mt-1">ACIONAMENTO DO MECANISMO ESPECIAL DE DEVOLUÇÃO (MED - RES. BCB 103/2021) E APLICAÇÃO DA SÚMULA 479 DO STJ</p>
+              </div>
+
+              <div class="space-y-4 text-justify">
+                <p>
+                  <strong>À DIRETORIA DE COMPLIANCE, GERÊNCIA DE RISCOS E OUVIDORIA GERAL</strong><br>
+                  <strong>INSTITUIÇÃO FINANCEIRA:</strong> <span id="prev_banco_origem" class="font-bold text-slate-900">[Banco de Origem]</span><br>
+                  <strong>CONSUMIDOR(A) NOTIFICANTE:</strong> <span id="prev_vitima_nome" class="font-bold text-slate-900">[Seu Nome]</span>, inscrito(a) no CPF sob nº <span id="prev_vitima_cpf" class="font-bold text-slate-900">[Seu CPF]</span>, residente e domiciliado(a) em <span id="prev_vitima_cidade" class="font-bold text-slate-900">[Cidade/UF]</span>.
+                </p>
+
+                <p class="font-bold text-slate-800">I - DA SÍNTESE DOS FATOS E DO GOLPE BANCÁRIO</p>
+                <p>
+                  Na data de <span id="prev_golpe_data" class="font-bold text-slate-900">[Data]</span>, o(a) Notificante foi vítima de fraude cibernética comissiva da modalidade <em>"<span id="prev_golpe_tipo" class="font-bold text-slate-900">[Tipo de Golpe]</span>"</em>, culminando na transferência indevida via PIX no montante de <strong>R$ <span id="prev_golpe_valor" class="font-bold text-slate-900">[Valor]</span></strong>, destinada à conta receptora mantida perante a instituição <span id="prev_banco_destino" class="font-bold text-slate-900">[Banco Destino]</span>, sob a titularidade do favorecido golpista <span id="prev_golpe_favorecido" class="font-bold text-slate-900">[Favorecido]</span> (Chave PIX: <span id="prev_golpe_chave" class="font-bold text-slate-900">[Chave PIX]</span>).
+                </p>
+
+                <p class="font-bold text-slate-800">II - DA RESPONSABILIDADE OBJETIVA E SÚMULA 479 DO STJ</p>
+                <p>
+                  Consoante remansosa jurisprudência sumulada do Superior Tribunal de Justiça (Súmula 479/STJ): <em>"As instituições financeiras respondem objetivamente pelos danos gerados por fortuito interno relativo a fraudes e delitos praticados por terceiros no âmbito de operações bancárias."</em> A vulnerabilidade do sistema de segurança e a autorização de movimentação anômala, em total dissonância com o perfil histórico do consumidor, configuram falha na prestação do serviço (Art. 14 do CDC).
+                </p>
+
+                <p class="font-bold text-slate-800">III - DA OBRIGAÇÃO DE ACIONAMENTO DO MED (RES. BCB 103/2021)</p>
+                <p>
+                  O Banco Central do Brasil expressamente impõe a abertura do Mecanismo Especial de Devolução e o consequente bloqueio cautelar dos fundos. A escusa preliminar da instituição em alegar "uso de senha pessoal" resta desprovida de respaldo legal ante o dever de segurança preconizado na Resolução BCB nº 147/2021.
+                </p>
+
+                <div class="p-4 rounded bg-slate-50 border border-dashed border-slate-300 text-center font-sans space-y-2">
+                  <div class="text-amber-600 font-bold text-xs uppercase flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Páginas 2 a 4 Protegidas para Emissão Oficial</span>
+                  </div>
+                  <p class="text-[11px] text-slate-600">
+                    O Dossiê completo inclui: Requerimento com Prazo Fatal de 10 Dias Úteis sob Pena de Ação Indenizatória por Danos Morais e Materiais + Petição Pronta para o Canal de Reclamações do Banco Central + Notificação para o Consumidor.gov.br e PROCON + Guia de B.O. Policial.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- COLUNA DIREITA: CHECKOUT E PAGAMENTO PIX -->
+            <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+              
+              <div class="bg-gradient-to-b from-brand-950 to-slate-900 border-2 border-brand-500 rounded-2xl p-6 shadow-2xl relative">
+                
+                <div class="absolute -top-3.5 right-6 px-3 py-1 rounded-full bg-brand-500 text-slate-950 font-extrabold text-[11px] uppercase tracking-wider shadow-md">
+                  Liberação Imediata
+                </div>
+
+                <div class="flex items-baseline gap-2 mb-2">
+                  <span class="text-xs text-slate-400 line-through">De R$ 97,00</span>
+                  <span class="text-3xl md:text-4xl font-black text-white">R$ 27,00</span>
+                  <span class="text-xs text-brand-400 font-bold">pagamento único</span>
+                </div>
+                <p class="text-xs text-slate-300 mb-6">Investimento ínfimo para exigir de volta a quantia que lhe foi subtraída ilegalmente.</p>
+
+                <div class="space-y-3 mb-6 border-y border-slate-800 py-4 text-xs">
+                  <div class="flex items-start gap-2.5 text-slate-200">
+                    <i class="fa-solid fa-check text-brand-400 mt-0.5"></i>
+                    <span><strong>Dossiê Formal em PDF</strong> completo pronto para enviar à Ouvidoria do banco.</span>
+                  </div>
+                  <div class="flex items-start gap-2.5 text-slate-200">
+                    <i class="fa-solid fa-check text-brand-400 mt-0.5"></i>
+                    <span><strong>Texto Formatado para o Banco Central</strong> (registrato.bcb.gov.br) com prazo estrito de resposta.</span>
+                  </div>
+                  <div class="flex items-start gap-2.5 text-slate-200">
+                    <i class="fa-solid fa-check text-brand-400 mt-0.5"></i>
+                    <span><strong>Reclamação Oficial para o PROCON</strong> e Consumidor.gov.br.</span>
+                  </div>
+                  <div class="flex items-start gap-2.5 text-slate-200">
+                    <i class="fa-solid fa-check text-brand-400 mt-0.5"></i>
+                    <span><strong>Roteiro do Boletim de Ocorrência</strong> com enquadramento no Art. 171 do Código Penal.</span>
+                  </div>
+                  <div class="flex items-start gap-2.5 text-slate-200">
+                    <i class="fa-solid fa-check text-brand-400 mt-0.5"></i>
+                    <span><strong>Contatos Diretos das Ouvidorias</strong> dos 12 principais bancos do Brasil.</span>
+                  </div>
+                </div>
+
+                <!-- QR CODE CONTAINER -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center mb-4">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Escaneie o QR Code com o App do seu Banco:</span>
+                  <div id="qrcode-box" class="bg-white p-3 rounded-lg inline-block shadow-md mx-auto min-h-[160px] min-w-[160px] flex items-center justify-center">
+                    <div id="qrcode" class="mx-auto"></div>
+                  </div>
+                  <div class="text-[11px] text-slate-400 mt-2 font-mono">
+                    Valor: <strong class="text-white">R$ 27,00</strong> · Chave: <strong class="text-white">luckasdiazz@gmail.com</strong>
+                  </div>
+                </div>
+
+                <!-- COPIA E COLA -->
+                <div class="space-y-2 mb-6">
+                  <label class="block text-[11px] font-semibold text-slate-300">Ou use o Código PIX Copia e Cola:</label>
+                  <div class="relative">
+                    <input type="text" id="pix_copia_cola" readonly value="" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-300 font-mono pr-24 focus:outline-none">
+                    <button onclick="copiarPix()" id="btn_copiar_pix" class="absolute right-1 top-1 bottom-1 px-3 bg-brand-600 hover:bg-brand-500 text-slate-950 text-xs font-bold rounded-lg transition flex items-center gap-1">
+                      <i class="fa-regular fa-copy"></i>
+                      <span>Copiar</span>
+                    </button>
+                  </div>
+                  <p id="msg_copiado" class="text-[11px] text-brand-400 font-semibold hidden text-center">
+                    <i class="fa-solid fa-check mr-1"></i> Código PIX copiado com sucesso! Abra o app do seu banco.
+                  </p>
+                </div>
+
+                <!-- BOTÃO DE AÇÃO: LIBERAR E BAIXAR PDF -->
+                <button onclick="confirmarPagamentoEBaixar()" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 hover:from-brand-400 hover:to-emerald-300 text-slate-950 font-black text-base transition flex items-center justify-center gap-2 shadow-xl shadow-brand-500/30">
+                  <i class="fa-solid fa-download text-lg"></i>
+                  <span>Já Fiz o PIX — Baixar Dossiê em PDF</span>
+                </button>
+
+                <p class="text-[10px] text-slate-400 text-center mt-3">
+                  <i class="fa-solid fa-shield text-brand-500 mr-1"></i> O download em PDF é gerado e baixado imediatamente após o clique.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Educational Section: Base Legal e Súmula 479 -->
+  <section id="base-legal" class="py-16 px-4 max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="text-brand-400 font-bold text-xs uppercase tracking-widest block mb-2">Entenda Seus Direitos</span>
+      <h2 class="text-2xl md:text-4xl font-extrabold text-white">Por Que o Banco Não Pode Lavar as Mãos?</h2>
+      <p class="text-slate-400 text-sm max-w-2xl mx-auto mt-2">
+        A jurisprudência brasileira e as normas do Banco Central são categóricas ao proteger a vítima contra fraudes bancárias.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-brand-950 border border-brand-500/40 text-brand-400 flex items-center justify-center text-xl font-bold mb-4">
+          <i class="fa-solid fa-gavel"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Súmula 479 do STJ</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Define que fraudes bancárias praticadas por terceiros caracterizam <strong>fortuito interno</strong>. O banco lucra com a operação financeira e, por isso, tem o dever legal e o risco da atividade de garantir a segurança, respondendo de forma objetiva (sem você precisar provar culpa do banco).
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-brand-950 border border-brand-500/40 text-brand-400 flex items-center justify-center text-xl font-bold mb-4">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Resoluções BCB 103 e 147</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Criaram o <strong>Mecanismo Especial de Devolução (MED)</strong> e o <strong>Bloqueio Cautelar</strong>. O banco é legalmente obrigado a acionar a instituição receptadora para travar os fundos da conta fraudadora e averiguar a ocorrência de engenharia social ou fraude no arranjo de pagamentos.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-brand-950 border border-brand-500/40 text-brand-400 flex items-center justify-center text-xl font-bold mb-4">
+          <i class="fa-solid fa-scale-balanced"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2">Artigo 14 do CDC</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          O Código de Defesa do Consumidor estipula que o fornecedor de serviços responde objetivamente pela reparação dos danos causados aos consumidores por defeitos relativos à prestação dos serviços e informações insuficientes sobre sua fruição e riscos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="como-funciona" class="py-16 px-4 bg-slate-900/60 border-t border-slate-800">
+    <div class="max-w-4xl mx-auto text-center">
+      <span class="text-brand-400 font-bold text-xs uppercase tracking-widest block mb-2">Fluxo Operacional</span>
+      <h2 class="text-2xl md:text-4xl font-extrabold text-white mb-10">Como Usar o Dossiê Após a Emissão</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-left">
+        <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-2xl font-black text-brand-500 block mb-2">01</span>
+          <h4 class="font-bold text-sm text-white mb-1">Preencha e Baixe</h4>
+          <p class="text-xs text-slate-400">Insira os dados do golpe e faça o download instantâneo do dossiê oficial em PDF.</p>
+        </div>
+        <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-2xl font-black text-brand-500 block mb-2">02</span>
+          <h4 class="font-bold text-sm text-white mb-1">Envie à Ouvidoria</h4>
+          <p class="text-xs text-slate-400">Encaminhe a notificação para o e-mail oficial da Ouvidoria do seu banco (diretório incluso no pacote).</p>
+        </div>
+        <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-2xl font-black text-brand-500 block mb-2">03</span>
+          <h4 class="font-bold text-sm text-white mb-1">Denuncie no BACEN</h4>
+          <p class="text-xs text-slate-400">Copie o texto pronto de reclamação para o canal oficial do Banco Central (registrato.bcb.gov.br).</p>
+        </div>
+        <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+          <span class="text-2xl font-black text-brand-500 block mb-2">04</span>
+          <h4 class="font-bold text-sm text-white mb-1">Aguarde o Retorno</h4>
+          <p class="text-xs text-slate-400">Pelo BACEN, os bancos têm prazo improrrogável de até 10 dias úteis para apresentar resposta técnica e proposta.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-16 px-4 max-w-3xl mx-auto">
+    <div class="text-center mb-10">
+      <span class="text-brand-400 font-bold text-xs uppercase tracking-widest block mb-2">Perguntas Frequentes</span>
+      <h2 class="text-2xl md:text-3xl font-extrabold text-white">Tire Suas Dúvidas Sobre o RecuperaPIX</h2>
+    </div>
+
+    <div class="space-y-4">
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <h4 class="font-bold text-sm text-white mb-1">Preciso de um advogado para enviar a Notificação Extrajudicial?</h4>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Não. A notificação extrajudicial e as denúncias administrativas no Banco Central e Procon são direitos do próprio consumidor lesado. O RecuperaPIX estrutura e formata tecnicamente o documento com os dispositivos jurídicos exatos para você protocolar por conta própria sem custos advocatícios.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <h4 class="font-bold text-sm text-white mb-1">O que é o MED (Mecanismo Especial de Devolução)?</h4>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          É um sistema criado pelo Banco Central (Resoluções 103 e 147) para permitir a devolução ágil de transferências PIX em casos de fraude comprovada ou falha operacional, possibilitando o bloqueio preventivo de fundos nas contas receptoras.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <h4 class="font-bold text-sm text-white mb-1">E se o banco não responder ou se recusar a devolver?</h4>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          O pacote inclui o direcionamento para o Juizado Especial Cível (JEC - Pequenas Causas), onde causas de até 20 salários mínimos não exigem advogado nem custas judiciais iniciais. A sua notificação extrajudicial com carimbo de protocolo servirá como prova documental cabal de que você tentou resolver extrajudicialmente.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-xl bg-slate-900 border border-slate-800">
+        <h4 class="font-bold text-sm text-white mb-1">Como o pagamento de R$ 27,00 é processado e quando recebo o material?</h4>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          O pagamento é realizado via PIX diretamente no ambiente seguro do Banco Central. Assim que você confirma o pagamento, o sistema gera instantaneamente o seu Dossiê em PDF oficial de alta resolução para download no seu próprio dispositivo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800 bg-slate-950 py-10 px-4 text-xs text-slate-400">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      
+      <div>
+        <span class="font-extrabold text-base text-white flex items-center gap-1.5 mb-1">
+          Recupera<span class="text-brand-500">PIX</span>
+        </span>
+        <p class="text-[11px] text-slate-500 max-w-sm">
+          Solução em tecnologia jurídica administrativa para cidadãos e consumidores. Em estrita conformidade com as Resoluções BCB 103/2021, Súmula 479 do STJ e Lei nº 8.078/1990.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-6 font-medium text-slate-300">
+        <a href="transparencia.html" class="text-brand-400 hover:text-brand-300 font-bold transition flex items-center gap-1">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Prestação de Contas (Transparência R$ 100)</span>
+        </a>
+        <a href="#como-funciona" class="hover:text-white transition">Como Funciona</a>
+        <a href="#base-legal" class="hover:text-white transition">Base Legal</a>
+        <a href="https://github.com/luckasdiazz/recuperapix" target="_blank" class="hover:text-white transition flex items-center gap-1">
+          <i class="fa-brands fa-github"></i>
+          <span>Código Aberto</span>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="max-w-6xl mx-auto border-t border-slate-900 mt-8 pt-6 text-[10px] text-slate-600 text-center leading-relaxed">
+      Aviso Legal: O RecuperaPIX disponibiliza modelos automatizados de notificações administrativas e orientações de procedimentos públicos do BACEN e PROCON. Não presta consultoria jurídica privativa de advogado (Lei 8.906/94). Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="pix.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

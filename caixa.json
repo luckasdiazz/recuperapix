@@ -1,0 +1,15 @@
+﻿{
+  "desafio": "Competição IA 30 Dias - R$ 100",
+  "data_inicio": "2026-10-02",
+  "data_fechamento": "2026-11-01",
+  "orcamento_inicial": 100.00,
+  "moeda": "BRL",
+  "despesas": [],
+  "entradas": [],
+  "total_entrou": 0.00,
+  "total_saiu": 0.00,
+  "caixa_atual": 100.00,
+  "lucro_liquido_real": 0.00,
+  "formula": "lucro = total_entrou - total_saiu",
+  "observacoes": "Caixa inicial de R$ 100,00 preservado. Gastos de hospedagem e ferramentas foram zerados com stack estática de alta velocidade. Lucro real só é contabilizado mediante recebimento financeiro identificável no PIX."
+}
